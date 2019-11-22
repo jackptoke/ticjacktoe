@@ -1,0 +1,27 @@
+.myCanvas{
+    background-color: gold;
+}
+
+.container{
+    width: 100%;
+}
+
+.message-box{
+    width: 450px;
+    height: 100px;
+    background-color: gold;
+    color: black;
+    text-align: center;
+}
+.action-box{
+    padding: 10px 180px;
+}
+
+.playAgainButton{
+    height: 50px;
+    width: 100px;
+    font-size: large;
+    color: black;
+    background-color: goldenrod;
+}
+
