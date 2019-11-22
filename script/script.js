@@ -443,7 +443,7 @@ async function botMove(m){
         if(p2.checkWin()){
             message.innerHTML = p2.name + " has won the game!!!";
             gameOver = true;
-            showButton();
+            // showButton();
         }
         else{
             message.innerHTML = p1.name + "'s turn";
