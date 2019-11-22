@@ -216,7 +216,7 @@ function setCanvas() {
 function draw(e){
 
     let s = getSquareNo(e.pageX, e.pageY);
-    if(count == 0 && modeSingle.checked){
+    if(count == 0){
         modeSingle.disabled = true;
         mode2Players.disabled = true;
     }
@@ -238,7 +238,7 @@ function draw(e){
                         
                         message.innerHTML = p1.name + " has won the game!!!";
                         gameOver = true;
-                        showButton();
+                        // showButton();
                         //call the bot to play
                         //implement the mode here
                     }
@@ -258,7 +258,7 @@ function draw(e){
                     if(p2.checkWin()){
                         message.innerHTML = p2.name + " has won the game!!!";
                         gameOver = true;
-                        showButton();
+                        // showButton();
                     }
                     else{
                         message.innerHTML = p1.name + "'s turn";
@@ -273,7 +273,7 @@ function draw(e){
     else{
         message.innerHTML = "It's taken!!  Try again.";
     }
-    if(count == 9){
+    if(count == 9 || gameOver){
         message.innerHTML = "Draw!!";
         gameOver = true;
         showButton();
