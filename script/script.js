@@ -1,16 +1,22 @@
 const c = document.querySelector("#myCanvas");
 const message = document.querySelector(".message");
 const actionBox = document.querySelector(".action-box");
-const lblCounter = document.querySelector(".counter");
+// const lblCounter = document.querySelector(".counter");
 const modeSingle = document.querySelector("#mode-single");
 const mode2Players = document.querySelector("#mode-2players");
+const ZERO = 0, ONE = 1, TWO = 2, THREE = 3, FOUR = 4, FIVE = 5, SIX = 6, SEVEN = 7, EIGHT = 8, NINE = 9, TEN = 10;
+const BOARD_SIZE = 450;
+const NUM_ROWs = 3;
+const SQUARE_SIZE = BOARD_SIZE/NUM_ROWs;
+const HALF_SQUARE_SIZE = (SQUARE_SIZE/TWO);
+
 
 let count = 0;
 let gameOver = false;
 class Player{
     constructor(name){
         this._name = name;
-        this._numWin = 0;
+        this._numWin = ZERO;
         this._squares = [];
     }
 
@@ -36,7 +42,7 @@ class Player{
 
     //check if the player has already chosen the square
     hasSquare(x){
-        if(this._squares.length == 0){
+        if(this._squares.length == ZERO){
             return false;
         }
         return this._squares.includes(x);
@@ -60,28 +66,28 @@ class Player{
 
     //check if the player has won the game
     checkWin(){
-        if(this.hasSquare(1) && this.hasSquare(2) && this.hasSquare(3)){
+        if(this.hasSquare(ONE) && this.hasSquare(TWO) && this.hasSquare(THREE)){
             return true;
         } 
-        else if(this.hasSquare(4) && this.hasSquare(5) && this.hasSquare(6)){
+        else if(this.hasSquare(FOUR) && this.hasSquare(FIVE) && this.hasSquare(SIX)){
             return true;
         } 
-        else if(this.hasSquare(7) && this.hasSquare(8) && this.hasSquare(9)){
+        else if(this.hasSquare(SEVEN) && this.hasSquare(EIGHT) && this.hasSquare(NINE)){
             return true;
         }
-        else if(this.hasSquare(1) && this.hasSquare(4) && this.hasSquare(7)){
+        else if(this.hasSquare(ONE) && this.hasSquare(FOUR) && this.hasSquare(SEVEN)){
             return true;
         }
-        else if(this.hasSquare(2) && this.hasSquare(5) && this.hasSquare(8)){
+        else if(this.hasSquare(TWO) && this.hasSquare(FIVE) && this.hasSquare(EIGHT)){
             return true;
         }
-        else if(this.hasSquare(3) && this.hasSquare(6) && this.hasSquare(9)){
+        else if(this.hasSquare(THREE) && this.hasSquare(SIX) && this.hasSquare(NINE)){
             return true;
         }
-        else if(this.hasSquare(1) && this.hasSquare(5) && this.hasSquare(9)){
+        else if(this.hasSquare(ONE) && this.hasSquare(FIVE) && this.hasSquare(NINE)){
             return true;
         }
-        else if(this.hasSquare(3) && this.hasSquare(5) && this.hasSquare(7)){
+        else if(this.hasSquare(THREE) && this.hasSquare(FIVE) && this.hasSquare(SEVEN)){
             return true;
         }
         else{
@@ -92,8 +98,8 @@ class Player{
     findWinningMove(opponent_squares) {
         //get all the valid moves
         let validMoves = [];
-        if(this._squares.length > 0){
-            for(let i=1; i<10; i++){
+        if(this._squares.length > ZERO){
+            for(let i=1; i<TEN; i++){
                 if(!this._squares.includes(i) && !opponent_squares.includes(i)){
                     validMoves.push(i);
                 }
@@ -128,7 +134,7 @@ class Player{
     findNextBestMove(opponent_squares){
         //create a list of cells that hasn't been occupied
         let validMoves = [];
-        for(let i=1; i<10; i++){
+        for(let i=1; i<TEN; i++){
             if(!this._squares.includes(i) && !opponent_squares.includes(i)){
                 validMoves.push(i);
             }
@@ -137,20 +143,20 @@ class Player{
         //When the opponent occupied two corner cell that are diagonally
         //opposite to each other
         console.log(opponent_squares);
-        if((opponent_squares.includes(3) && opponent_squares.includes(7)) || (opponent_squares.includes(1) && opponent_squares.includes(9))){
-            let moves = validMoves.filter((m) => !(m == 1 || m == 3 || m == 7 || m == 9));
+        if((opponent_squares.includes(THREE) && opponent_squares.includes(SEVEN)) || (opponent_squares.includes(ONE) && opponent_squares.includes(NINE))){
+            let moves = validMoves.filter((m) => !(m == ONE || m == THREE || m == SEVEN || m == NINE));
             let r = Math.floor(moves.length*Math.random());
             return moves[r];
         }
 
-        if(!this._squares.includes(9) && opponent_squares.includes(8) && opponent_squares.includes(6)){
-            return 9;
+        if(!this._squares.includes(NINE) && opponent_squares.includes(EIGHT) && opponent_squares.includes(SIX)){
+            return NINE;
         }
 
         //find the next best move that will give the next winning move
         for(let move of validMoves){
             this._squares.push(move);
-            if(this.findWinningMove(opponent_squares) > 0){
+            if(this.findWinningMove(opponent_squares) > ZERO){
                 this._squares.pop();
                 return move;
             }
@@ -161,20 +167,20 @@ class Player{
         
         //if no such a move is found
         //just randomly choose a move
-        if(validMoves.includes(5)){
-            return 5;
+        if(validMoves.includes(FIVE)){
+            return FIVE;
         }
-        else if(validMoves.includes(1)){
-            return 1;
+        else if(validMoves.includes(ONE)){
+            return ONE;
         }
-        else if(validMoves.includes(3)){
-            return 3;
+        else if(validMoves.includes(THREE)){
+            return THREE;
         }
-        else if(validMoves.includes(7)){
-            return 7;
+        else if(validMoves.includes(SEVEN)){
+            return SEVEN;
         }
-        else if(validMoves.includes(9)){
-            return 9;
+        else if(validMoves.includes(NINE)){
+            return NINE;
         }
         let r = Math.floor(validMoves.length*Math.random());
         return validMoves[r];
@@ -188,23 +194,23 @@ let p2 = new Player("Player 2");
 function setCanvas() {
     let ctx = c.getContext("2d");
     // ctx.beginPath();
-    // ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+    // ctx.arc(100, HALF_SQUARE_SIZE, 50, ZERO, 2 * Math.PI);
     // ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(0, 150);
-    ctx.lineTo(450, 150);
+    ctx.moveTo(ZERO, SQUARE_SIZE);
+    ctx.lineTo(BOARD_SIZE, SQUARE_SIZE);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(0, 300);
-    ctx.lineTo(450, 300);
+    ctx.moveTo(ZERO, (SQUARE_SIZE*TWO));
+    ctx.lineTo(BOARD_SIZE, (SQUARE_SIZE*TWO));
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(150, 0);
-    ctx.lineTo(150, 450);
+    ctx.moveTo(SQUARE_SIZE, ZERO);
+    ctx.lineTo(SQUARE_SIZE, BOARD_SIZE);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(300, 0);
-    ctx.lineTo(300, 450);
+    ctx.moveTo((SQUARE_SIZE*TWO), ZERO);
+    ctx.lineTo((SQUARE_SIZE*TWO), BOARD_SIZE);
     ctx.stroke();
     
     //display a message
@@ -216,39 +222,34 @@ function setCanvas() {
 function draw(e){
 
     let s = getSquareNo(e.pageX, e.pageY);
-    if(count == 0){
+    if(count == ZERO){
         modeSingle.disabled = true;
         mode2Players.disabled = true;
     }
     
-    if(s > 0 && s < 10 && !gameOver && count < 9){
+    if(s > ZERO && s < TEN && !gameOver && count < NINE){
         // console.log(e.pageX + " " + e.pageY);
         // let xy = getSquareCenterXY(e.pageX, e.pageY);
         let xy = getSquareCenterXY(s);
-        let x = xy[0];
+        let x = xy[ZERO];
         let y = xy[1];
 
         if (!(p1.hasSquare(s) || p2.hasSquare(s))){
-            if(count%2 == 0){
+            if(count%2 == ZERO){
                 if(p1.addSquare(s)){
                     count += 1;
-                    lblCounter.innerHTML = "Counter: " + count;
+                    // lblCounter.innerHTML = "Counter: " + count;
                     drawCircle(x, y);
                     if(p1.checkWin()){
-                        
                         message.innerHTML = p1.name + " has won the game!!!";
                         gameOver = true;
-                        // showButton();
-                        //call the bot to play
-                        //implement the mode here
                     }
                     else{
                         message.innerHTML = p2.name + "'s turn";
-                        if(count < 9 && modeSingle.checked){
+                        if(count < NINE && modeSingle.checked){
                             botPlay();
                         }
-                    }
-                    
+                    }   
                 }
             }
             else{   
@@ -268,14 +269,17 @@ function draw(e){
         }else{
             message.innerHTML = "It's taken!!  Try again.";
         }
-        
     }
     else{
         message.innerHTML = "It's taken!!  Try again.";
     }
-    if(count == 9 || gameOver){
+    if(count == NINE){
         message.innerHTML = "Draw!!";
         gameOver = true;
+        showButton();
+    } else if(gameOver){
+        // message.innerHTML = "Draw!!";
+        // gameOver = true;
         showButton();
     }
 }
@@ -286,13 +290,14 @@ function showButton(){
     playAgainButton.id = "playAgainButton";
     playAgainButton.className = "playAgainButton";
     playAgainButton.addEventListener("click", resetGame);
+    c.removeEventListener("click", draw, true);
     actionBox.appendChild(playAgainButton);
 }
 
 function drawCircle(x, y){
     let ctx = c.getContext("2d");
     ctx.beginPath();
-    ctx.arc(x, y, 25, 0, 2 * Math.PI);
+    ctx.arc(x, y, 25, ZERO, 2 * Math.PI);
     ctx.fillStyle = "red";
     ctx.fill();
     // ctx.stroke();
@@ -312,9 +317,9 @@ function drawX(x, y){
 
 function resetGame(){
     let ctx = c.getContext("2d");
-    ctx.clearRect(0, 0, 450, 450)
+    ctx.clearRect(ZERO, ZERO, BOARD_SIZE, BOARD_SIZE);
     setCanvas();
-    count = 0;
+    count = ZERO;
     gameOver = false;
     modeSingle.disabled = false;
     mode2Players.disabled = false;
@@ -322,71 +327,74 @@ function resetGame(){
     p2.clearSquares();
     let playAgainButton = document.querySelector("#playAgainButton");
     actionBox.removeChild(playAgainButton);
+    c.addEventListener("click", draw, true);
 }
 
+//matching the X, Y coordinate to the square block
 function getSquareNo(x, y){
-    if (x < 150 && y < 150){
-        return 1;
+    if (x < SQUARE_SIZE && y < SQUARE_SIZE){
+        return ONE;
     }
-    else if(x < 300 && x > 150 && y < 150){
-        return 2;
+    else if(x < (SQUARE_SIZE*TWO) && x > SQUARE_SIZE && y < SQUARE_SIZE){
+        return TWO;
     }
-    else if(x < 450 && x > 300 && y < 150){
-        return 3;
+    else if(x < BOARD_SIZE && x > (SQUARE_SIZE*TWO) && y < SQUARE_SIZE){
+        return THREE;
     }
-    else if(x < 150 && y > 150 && y < 300){
-        return 4;
+    else if(x < SQUARE_SIZE && y > SQUARE_SIZE && y < (SQUARE_SIZE*TWO)){
+        return FOUR;
     }
-    else if(x > 150 && x < 300 && y > 150 && y < 300){
-        return 5;
+    else if(x > SQUARE_SIZE && x < (SQUARE_SIZE*TWO) && y > SQUARE_SIZE && y < (SQUARE_SIZE*TWO)){
+        return FIVE;
     }
-    else if(x > 300 && x < 450 && y > 150 && y < 300){
-        return 6;
+    else if(x > (SQUARE_SIZE*TWO) && x < BOARD_SIZE && y > SQUARE_SIZE && y < (SQUARE_SIZE*TWO)){
+        return SIX;
     }
-    else if(x > 0 && x < 150 && y > 300 && y < 450){
-        return 7;
+    else if(x > ZERO && x < SQUARE_SIZE && y > (SQUARE_SIZE*TWO) && y < BOARD_SIZE){
+        return SEVEN;
     }
-    else if(x > 150 && x < 300 && y > 300 && y < 450){
-        return 8;
+    else if(x > SQUARE_SIZE && x < (SQUARE_SIZE*TWO) && y > (SQUARE_SIZE*TWO) && y < BOARD_SIZE){
+        return EIGHT;
     }
-    else if(x > 300 && x < 450 && y > 300 && y < 450){
-        return 9;
+    else if(x > (SQUARE_SIZE*TWO) && x < BOARD_SIZE && y > (SQUARE_SIZE*TWO) && y < BOARD_SIZE){
+        return NINE;
     }
     else{
         return -1;
     }
 }
 
+//getting the X, Y coordinate of the center of the square
 function getSquareCenterXY(s){
-    if (s === 1){
-        return [75, 75];
+    if (s === ONE){
+        return [HALF_SQUARE_SIZE, HALF_SQUARE_SIZE];
     }
-    else if(s === 2){
-        return [225, 75];
+    else if(s === TWO){
+        return [(SQUARE_SIZE + HALF_SQUARE_SIZE), HALF_SQUARE_SIZE];
     }
-    else if(s === 3){
-        return [375, 75];
+    else if(s === THREE){
+        return [((TWO*SQUARE_SIZE) + HALF_SQUARE_SIZE), HALF_SQUARE_SIZE];
     }
-    else if(s === 4){
-        return [75, 225];
+    else if(s === FOUR){
+        return [HALF_SQUARE_SIZE, (SQUARE_SIZE + HALF_SQUARE_SIZE)];
     }
-    else if(s === 5){
-        return [225, 225];
+    else if(s === FIVE){
+        return [(SQUARE_SIZE + HALF_SQUARE_SIZE), (SQUARE_SIZE + HALF_SQUARE_SIZE)];
     }
-    else if(s === 6){
-        return [375, 225];
+    else if(s === SIX){
+        return [((TWO*SQUARE_SIZE) + HALF_SQUARE_SIZE), (SQUARE_SIZE + HALF_SQUARE_SIZE)];
     }
-    else if(s === 7){
-        return [75, 375];
+    else if(s === SEVEN){
+        return [HALF_SQUARE_SIZE, ((TWO*SQUARE_SIZE) + HALF_SQUARE_SIZE)];
     }
-    else if(s === 8){
-        return [225, 375];
+    else if(s === EIGHT){
+        return [(SQUARE_SIZE + HALF_SQUARE_SIZE), ((TWO*SQUARE_SIZE) + HALF_SQUARE_SIZE)];
     }
-    else if(s === 9){
-        return [375, 375];
+    else if(s === NINE){
+        return [((TWO*SQUARE_SIZE) + HALF_SQUARE_SIZE), ((TWO*SQUARE_SIZE) + HALF_SQUARE_SIZE)];
     }
-    else{
-        return [0, 0];
+    else{//if the input number is invalide, it would return [0,0]
+        return [ZERO, ZERO];
     }
 }
 
@@ -398,13 +406,13 @@ function botPlay(){
     c.removeEventListener("click", draw, true);
     let move = p2.findWinningMove(p1.squares);
     // console.log(move);
-    if(move > 0){
+    if(move > ZERO){
         //make the winning move
         botMove(move);
     }else{
         //block the opponent
         move = p2.findOpponentWinningMove(p1.squares);
-        if(move > 0){
+        if(move > ZERO){
             botMove(move);
         }
         else{
@@ -413,7 +421,7 @@ function botPlay(){
             botMove(move);
         }
     }
-    if(count == 9){
+    if(count == NINE){
         message.innerHTML = "Draw!!";
         gameOver = true;
         showButton();
@@ -426,7 +434,7 @@ async function botMove(m){
     
     if(p2.addSquare(m)){
         count += 1;
-        lblCounter.innerHTML = "Counter: " + count;
+        // lblCounter.innerHTML = "Counter: " + count;
         let xy = getSquareCenterXY(m);
         let x = xy[0];
         let y = xy[1];
